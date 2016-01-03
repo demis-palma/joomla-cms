@@ -41,11 +41,11 @@ JHtml::_('behavior.keepalive');
 	<fieldset class="userdata">
 	<p id="form-login-username">
 		<label for="modlgn-username"><?php echo JText::_('MOD_LOGIN_VALUE_USERNAME') ?></label>
-		<input id="modlgn-username" type="text" name="username" class="inputbox"  size="18" />
+		<input id="modlgn-username" type="text" name="username" class="inputbox" />
 	</p>
 	<p id="form-login-password">
 		<label for="modlgn-passwd"><?php echo JText::_('JGLOBAL_PASSWORD') ?></label>
-		<input id="modlgn-passwd" type="password" name="password" class="inputbox" size="18" />
+		<input id="modlgn-passwd" type="password" name="password" class="inputbox"  />
 	</p>
 	<?php if (count($twofactormethods) > 1) : ?>
 		<div id="form-login-secretkey" class="control-group">
@@ -53,11 +53,11 @@ JHtml::_('behavior.keepalive');
 				<?php if (!$params->get('usetext')) : ?>
 					<div class="input-prepend input-append">
 						<label for="modlgn-secretkey"><?php echo JText::_('JGLOBAL_SECRETKEY'); ?></label>
-						<input id="modlgn-secretkey" autocomplete="off" type="text" name="secretkey" class="input-small" tabindex="0" size="18" />
+						<input id="modlgn-secretkey" autocomplete="off" type="text" name="secretkey" class="input-small" tabindex="0" />
 					</div>
 				<?php else: ?>
 					<label for="modlgn-secretkey"><?php echo JText::_('JGLOBAL_SECRETKEY') ?></label>
-					<input id="modlgn-secretkey" autocomplete="off" type="text" name="secretkey" class="input-small" tabindex="0" size="18" />
+					<input id="modlgn-secretkey" autocomplete="off" type="text" name="secretkey" class="input-small" tabindex="0" />
 				<?php endif; ?>
 			</div>
 		</div>
