@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_admin
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -406,18 +406,29 @@ class JoomlaInstallerScript
 	public function deleteUnexistingFiles()
 	{
 		$files = array(
+			// Joomla 1.6 - 1.7 - 2.5
 			'/libraries/cms/cmsloader.php',
+			'/libraries/joomla/database/databaseexception.php',
+			'/libraries/joomla/database/databasequery.php',
+			'/libraries/joomla/environment/response.php',
 			'/libraries/joomla/form/fields/templatestyle.php',
 			'/libraries/joomla/form/fields/user.php',
 			'/libraries/joomla/form/fields/menu.php',
 			'/libraries/joomla/form/fields/helpsite.php',
+			'/libraries/joomla/github/gists.php',
+			'/libraries/joomla/github/issues.php',
+			'/libraries/joomla/github/pulls.php',
+			'/libraries/joomla/log/logentry.php',
 			'/administrator/components/com_admin/sql/updates/mysql/1.7.0.sql',
 			'/administrator/components/com_admin/sql/updates/sqlsrv/2.5.2-2012-03-05.sql',
 			'/administrator/components/com_admin/sql/updates/sqlsrv/2.5.3-2012-03-13.sql',
 			'/administrator/components/com_admin/sql/updates/sqlsrv/index.html',
+			'/administrator/components/com_content/models/fields/filters.php',
 			'/administrator/components/com_users/controllers/config.php',
+			'/administrator/components/com_users/helpers/levels.php',
 			'/administrator/language/en-GB/en-GB.plg_system_finder.ini',
 			'/administrator/language/en-GB/en-GB.plg_system_finder.sys.ini',
+			'/administrator/modules/mod_quickicon/tmpl/default_button.php',
 			'/media/editors/tinymce/jscripts/tiny_mce/plugins/advhr/editor_plugin_src.js',
 			'/media/editors/tinymce/jscripts/tiny_mce/plugins/advimage/editor_plugin_src.js',
 			'/media/editors/tinymce/jscripts/tiny_mce/plugins/advlink/editor_plugin_src.js',
@@ -1387,6 +1398,15 @@ class JoomlaInstallerScript
 			'/libraries/vendor/symfony/yaml/Symfony/Component/Yaml/Exception/ParseException.php',
 			'/libraries/vendor/symfony/yaml/Symfony/Component/Yaml/Exception/RuntimeException.php',
 			'/administrator/components/com_tags/helpers/tags.php',
+			'/libraries/vendor/phpmailer/phpmailer/extras/class.html2text.php',
+			'/libraries/joomla/document/error/error.php',
+			'/libraries/joomla/document/feed/feed.php',
+			'/libraries/joomla/document/html/html.php',
+			'/libraries/joomla/document/image/image.php',
+			'/libraries/joomla/document/json/json.php',
+			'/libraries/joomla/document/opensearch/opensearch.php',
+			'/libraries/joomla/document/raw/raw.php',
+			'/libraries/joomla/document/xml/xml.php',
 		);
 
 		// TODO There is an issue while deleting folders using the ftp mode
@@ -1475,6 +1495,12 @@ class JoomlaInstallerScript
 			'/libraries/vendor/symfony/yaml/Symfony/Component',
 			'/libraries/vendor/symfony/yaml/Symfony',
 			'/administrator/components/com_tags/helpers',
+			'/libraries/joomla/document/error',
+			'/libraries/joomla/document/image',
+			'/libraries/joomla/document/json',
+			'/libraries/joomla/document/opensearch',
+			'/libraries/joomla/document/raw',
+			'/libraries/joomla/document/xml',
 		);
 
 		jimport('joomla.filesystem.file');
@@ -1587,7 +1613,12 @@ class JoomlaInstallerScript
 		 * The session may have not been started yet (e.g. CLI-based Joomla! update scripts). Let's make sure we do
 		 * have a valid session.
 		 */
-		JFactory::getSession()->restart();
+		$session = JFactory::getSession();
+
+		if (!$session->isActive())
+		{
+			$session->restart();
+		}
 
 		// If $_SESSION['__default'] is no longer set we do not have a migrated session, therefore we can quit.
 		if (!isset($_SESSION['__default']))
@@ -1605,13 +1636,13 @@ class JoomlaInstallerScript
 				case 'pdomysql':
 				case 'mysql':
 				case 'mysqli':
-					$db->truncateTable($db->qn('#__sessions'));
+					$db->truncateTable('#__session');
 					break;
 
 				// Non-MySQL databases, use a simple DELETE FROM query
 				default:
 					$query = $db->getQuery(true)
-						->delete($db->qn('#__sessions'));
+						->delete($db->qn('#__session'));
 					$db->setQuery($query)->execute();
 					break;
 			}
